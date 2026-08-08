@@ -6,9 +6,11 @@
     <title>قائمة منتجات Ashry Natural</title>
     <style>
         :root {
-            --primary-color: #7b2cbf;
-            --secondary-color: #9d4edd;
-            --bg-color: #f8f9fa;
+            /* تعديل الألوان لتصبح التدرجات الوردية (Pink) هي الطاغية */
+            --primary-color: #d81b60;
+            --secondary-color: #f48fb1;
+            --accent-pink: #f06292;
+            --bg-color: #fff5f8;
             --card-bg: #ffffff;
             --text-color: #212529;
             --out-of-stock: #e63946;
@@ -59,6 +61,7 @@
         .filter-btn.active, .filter-btn:hover {
             background-color: var(--primary-color);
             color: white;
+            box-shadow: 0 4px 10px rgba(216, 27, 96, 0.25);
         }
 
         .products-grid {
@@ -71,17 +74,23 @@
             background-color: var(--card-bg);
             border-radius: 12px;
             padding: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 12px rgba(216, 27, 96, 0.08);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             position: relative;
-            border: 1px solid #edf2f7;
+            border: 1px solid #fce4ec;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(216, 27, 96, 0.15);
         }
 
         .product-category {
             font-size: 0.8rem;
-            color: #6c757d;
+            color: #888;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
@@ -109,13 +118,13 @@
         }
 
         .in-stock {
-            background-color: #d4edda;
-            color: #155724;
+            background-color: #e8f5e9;
+            color: #2e7d32;
         }
 
         .out-of-stock {
-            background-color: #f8d7da;
-            color: #721c24;
+            background-color: #ffebee;
+            color: #c62828;
         }
     </style>
 </head>
@@ -138,7 +147,6 @@
 </div>
 
 <script>
-// البيانات الخام مع تكرار متعمد للاختبار
 const rawProductsList = [
     { name: "زيت الروزماري المقطر - Rosemary Essential Oil", price: 350, category: "Raw Products", inStock: true },
     { name: "صابون نوبي بالكركدية - Nubian Soap With Hibiscus", price: 275, category: "Skin Care", inStock: true },
@@ -181,11 +189,11 @@ const rawProductsList = [
     { name: "صابونة الشيا وجوز الهند - Shea and Coconut Soap", price: 150, category: "Organic Soaps", inStock: true },
     { name: "صابون مغربي - Moroccan Soap", price: 225, category: "Skin Care", inStock: true },
     
-    // منتجات مكررة تجريبياً للتأكد من عدم عرضها مرتين
+    // منتجات مكررة للتأكد من المكنزم
     { name: "زيت الروزماري المقطر - Rosemary Essential Oil", price: 350, category: "Raw Products", inStock: true },
     { name: "تنت كريمي - Tint Creamy", price: 175, category: "Skin Care", inStock: true },
     
-    // المنتجات الجديدة من الدفعة الثانية
+    // باقي المنتجات
     { name: "مرطب الشفاه - Lip Balm", price: 125, category: "Lips Care", inStock: true },
     { name: "مقشر القهوه - Coffee Scrub", price: 250, category: "Skin Care", inStock: true },
     { name: "لوفه مغربي - Moroccan Loofah", price: 175, category: "Skin Care", inStock: true },
@@ -216,7 +224,6 @@ const rawProductsList = [
     { name: "تنت ملون الشفاه والخدود - Tint", price: 100, category: "Skin Care", inStock: true }
 ];
 
-// آلية إزالة التكرار بناءً على اسم المنتج
 function removeDuplicates(products) {
     const uniqueMap = new Map();
     products.forEach(product => {
@@ -228,7 +235,6 @@ function removeDuplicates(products) {
     return Array.from(uniqueMap.values());
 }
 
-// القائمة المفلترة والخالية من التكرار
 const productsList = removeDuplicates(rawProductsList);
 
 function displayProducts(products) {
@@ -255,7 +261,6 @@ function displayProducts(products) {
 }
 
 function filterProducts(category) {
-    // تحديث الشكل النشط للزر
     const buttons = document.querySelectorAll('.filter-btn');
     buttons.forEach(btn => btn.classList.remove('active'));
     event.target.classList.add('active');
@@ -268,7 +273,6 @@ function filterProducts(category) {
     }
 }
 
-// عرض جميع المنتجات عند تحميل الصفحة
 displayProducts(productsList);
 </script>
 
