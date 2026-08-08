@@ -6,7 +6,6 @@
     <title>قائمة منتجات Ashry Natural</title>
     <style>
         :root {
-            /* تعديل الألوان لتصبح التدرجات الوردية (Pink) هي الطاغية */
             --primary-color: #d81b60;
             --secondary-color: #f48fb1;
             --accent-pink: #f06292;
@@ -66,14 +65,14 @@
 
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
             gap: 20px;
         }
 
         .product-card {
             background-color: var(--card-bg);
             border-radius: 12px;
-            padding: 20px;
+            overflow: hidden;
             box-shadow: 0 4px 12px rgba(216, 27, 96, 0.08);
             display: flex;
             flex-direction: column;
@@ -88,6 +87,31 @@
             box-shadow: 0 6px 16px rgba(216, 27, 96, 0.15);
         }
 
+        .product-image-wrapper {
+            width: 100%;
+            height: 180px;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-bottom: 1px solid #fce4ec;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            justify-content: space-between;
+        }
+
         .product-category {
             font-size: 0.8rem;
             color: #888;
@@ -96,34 +120,35 @@
         }
 
         .product-title {
-            font-size: 1.1rem;
-            margin: 10px 0;
+            font-size: 1rem;
+            margin: 8px 0;
             font-weight: 600;
         }
 
         .product-price {
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             color: var(--primary-color);
             font-weight: bold;
         }
 
         .status-badge {
             position: absolute;
-            top: 15px;
-            left: 15px;
+            top: 10px;
+            left: 10px;
             padding: 4px 8px;
             border-radius: 6px;
             font-size: 0.75rem;
             font-weight: bold;
+            z-index: 2;
         }
 
         .in-stock {
-            background-color: #e8f5e9;
+            background-color: rgba(232, 245, 233, 0.9);
             color: #2e7d32;
         }
 
         .out-of-stock {
-            background-color: #ffebee;
+            background-color: rgba(255, 235, 238, 0.9);
             color: #c62828;
         }
     </style>
@@ -147,81 +172,76 @@
 </div>
 
 <script>
+// اتركي image: "" فارغة وسيظهر الكارت بدون صورة نهائياً.
+// ضعي رابط الصورة عندما ترغبين فقط مثل: image: "images/rosemary.jpg"
 const rawProductsList = [
-    { name: "زيت الروزماري المقطر - Rosemary Essential Oil", price: 350, category: "Raw Products", inStock: true },
-    { name: "صابون نوبي بالكركدية - Nubian Soap With Hibiscus", price: 275, category: "Skin Care", inStock: true },
-    { name: "زيت جنين القمح - Wheat germ Oil", price: 125, category: "Raw Products", inStock: true },
-    { name: "كريم ترطيب اليدين - Hand Cream", price: 225, category: "Skin Care", inStock: true },
-    { name: "كيس مخده ساتان - Satin Case", price: 200, category: "Hair Care", inStock: true },
-    { name: "مرطب القدم - Foot Balm", price: 200, category: "Skin Care", inStock: true },
-    { name: "بادي يوجرت برائحة جوز الهند - Body Yogurt Naughty Coconut", price: 250, category: "Skin Care", inStock: true },
-    { name: "زبدة الجسم برائحة جوز الهند - Body Butter Coconut", price: 275, category: "Skin Care", inStock: true },
-    { name: "ماء الروزماري - Rosemary Water", price: 125, category: "Raw Products", inStock: true },
-    { name: "مزيل عرق بدون رائحة - Unscented Deodorant", price: 250, category: "Skin Care", inStock: true },
-    { name: "سيروم الاظافر - Nail serum", price: 200, category: "Skin Care", inStock: true },
-    { name: "ماء النعناع - Peppermint Water", price: 100, category: "Raw Products", inStock: true },
-    { name: "زيت القرع - Pumpkin seeds oil", price: 125, category: "Raw Products", inStock: true },
-    { name: "زيت بذور العنب - Grapeseeds Oil", price: 225, category: "Raw Products", inStock: true },
-    { name: "توكه ساتان - Satin Scrunchie", price: 75, category: "Hair Care", inStock: true },
-    { name: "مشط خشبي", price: 100, category: "Hair Care", inStock: false },
-    { name: "صابونة الاعشاب - Herbs Soap", price: 150, category: "Organic Soaps", inStock: true },
-    { name: "بادي يوجرت برائحة الخوخ - Body Yogurt Fresh Peach", price: 250, category: "Skin Care", inStock: true },
-    { name: "زيت السمسم - Sesame Oil", price: 120, category: "Raw Products", inStock: true },
-    { name: "ماء الليمون - Lemon Water", price: 125, category: "Raw Products", inStock: true },
-    { name: "زيت الكركديه - Hibiscus Oil", price: 150, category: "Raw Products", inStock: true },
-    { name: "شامبو الاطفال - Kids Shampoo", price: 275, category: "Hair Care", inStock: true },
-    { name: "زيت اللوز الحلو - Sweet Almond Oil", price: 150, category: "Raw Products", inStock: true },
-    { name: "بادي يوجرت برائحة الروز فانيلا - Body Yogurt Rose Vanilla", price: 250, category: "Skin Care", inStock: true },
-    { name: "زيت الخروع - Castor Oil", price: 120, category: "Raw Products", inStock: true },
-    { name: "مقشر الشفاه - Lip Scrub", price: 100, category: "Lips Care", inStock: true },
-    { name: "واقى الشمس - Sun Screen", price: 400, category: "Skin Care", inStock: false },
-    { name: "زيت الافوكادو - Avocado Oil", price: 125, category: "Raw Products", inStock: true },
-    { name: "زيت الارجان المغربي - Moroccan Argan Oil", price: 350, category: "Raw Products", inStock: true },
-    { name: "فرشاة الشعر بخشب البامبو - Hair Brush", price: 250, category: "Hair Care", inStock: true },
-    { name: "زيت القهوة - Coffee Oil", price: 150, category: "Raw Products", inStock: true },
-    { name: "ماء اللافندر - Lavender Water", price: 125, category: "Raw Products", inStock: true },
-    { name: "تنت كريمي - Tint Creamy", price: 175, category: "Skin Care", inStock: true },
-    { name: "فوطه مايكروفايبر - Microfiber Towel", price: 250, category: "Hair Care", inStock: true },
-    { name: "زبدة الشيا - Shea Butter", price: 200, category: "Raw Products", inStock: true },
-    { name: "زيت الورد - Rose oil", price: 150, category: "Raw Products", inStock: true },
-    { name: "زيت الجرجير - Eruca Oil", price: 120, category: "Raw Products", inStock: true },
-    { name: "قناع الطمي الاسواني - Aswan Clay Mask", price: 250, category: "Skin Care", inStock: false },
-    { name: "صابونة الشيا وجوز الهند - Shea and Coconut Soap", price: 150, category: "Organic Soaps", inStock: true },
-    { name: "صابون مغربي - Moroccan Soap", price: 225, category: "Skin Care", inStock: true },
-    
-    // منتجات مكررة للتأكد من المكنزم
-    { name: "زيت الروزماري المقطر - Rosemary Essential Oil", price: 350, category: "Raw Products", inStock: true },
-    { name: "تنت كريمي - Tint Creamy", price: 175, category: "Skin Care", inStock: true },
-    
-    // باقي المنتجات
-    { name: "مرطب الشفاه - Lip Balm", price: 125, category: "Lips Care", inStock: true },
-    { name: "مقشر القهوه - Coffee Scrub", price: 250, category: "Skin Care", inStock: true },
-    { name: "لوفه مغربي - Moroccan Loofah", price: 175, category: "Skin Care", inStock: true },
-    { name: "سيرم حب الشباب - Acne Serum", price: 225, category: "Skin Care", inStock: true },
-    { name: "مرطب شفاه - Lip Balm", price: 100, category: "Lips Care", inStock: true },
-    { name: "الحنه النوبيه - Nubian Henna", price: 225, category: "Hair Care", inStock: true },
-    { name: "بادي يوجرت Sexy Graffiti", price: 250, category: "Skin Care", inStock: true },
-    { name: "صابونة الكركديه - Hibiscus Soap", price: 150, category: "Organic Soaps", inStock: false },
-    { name: "واقى الشمس - Sun Block", price: 250, category: "Skin Care", inStock: true },
-    { name: "زيت السعد - Cyperus Oil", price: 225, category: "Skin Care", inStock: true },
-    { name: "زيت الجوجوبا - Jojoba Oil", price: 150, category: "Raw Products", inStock: true },
-    { name: "صابونة الفحم - Charcoal Soap", price: 150, category: "Organic Soaps", inStock: true },
-    { name: "صابونة القهوه - Coffee Soap", price: 150, category: "Organic Soaps", inStock: true },
-    { name: "سيرم الهيالورونيك - Hyaluronic Acid Serum", price: 450, category: "Skin Care", inStock: true },
-    { name: "جيل الصبار - Aleo Vera gel", price: 200, category: "Hair Care", inStock: true },
-    { name: "كريم الكولاجين - Collagen Cream", price: 250, category: "Skin Care", inStock: true },
-    { name: "سيرم الرموش - Eyelash Serum", price: 200, category: "Skin Care", inStock: true },
-    { name: "بلسم الشعر - Hair Conditioner", price: 275, category: "Hair Care", inStock: true },
-    { name: "الوصفه النوبيه - Nubian Recipe", price: 425, category: "Hair Care", inStock: true },
-    { name: "وصفة كارما - Karma Recipe", price: 425, category: "Hair Care", inStock: true },
-    { name: "غسول الوجه بالجزر - Facial Cleanser with Carrot", price: 250, category: "Skin Care", inStock: true },
-    { name: "شامبو الشعر - Hair Shampoo", price: 275, category: "Hair Care", inStock: true },
-    { name: "كريم مرطب سوفت اند جلو - Soft and glow Cream", price: 250, category: "Skin Care", inStock: true },
-    { name: "سبراي كارما مقوي للشعر - Karma Tonic Spray200", price: 325, category: "Hair Care", inStock: true },
-    { name: "مزيل عرق اكسترا - Extra Whitening Deodorant", price: 250, category: "Skin Care", inStock: true },
-    { name: "سبراي كارما تونيك اكسترا - Karma Tonic Extra", price: 450, category: "Hair Care", inStock: true },
-    { name: "مزيل عرق للتفتيح - Whitening Deodorant", price: 200, category: "Skin Care", inStock: true },
-    { name: "تنت ملون الشفاه والخدود - Tint", price: 100, category: "Skin Care", inStock: true }
+    { name: "زيت الروزماري المقطر - Rosemary Essential Oil", price: 350, category: "Raw Products", inStock: true, image: "" },
+    { name: "صابون نوبي بالكركدية - Nubian Soap With Hibiscus", price: 275, category: "Skin Care", inStock: true, image: "" },
+    { name: "زيت جنين القمح - Wheat germ Oil", price: 125, category: "Raw Products", inStock: true, image: "" },
+    { name: "كريم ترطيب اليدين - Hand Cream", price: 225, category: "Skin Care", inStock: true, image: "" },
+    { name: "كيس مخده ساتان - Satin Case", price: 200, category: "Hair Care", inStock: true, image: "" },
+    { name: "مرطب القدم - Foot Balm", price: 200, category: "Skin Care", inStock: true, image: "" },
+    { name: "بادي يوجرت برائحة جوز الهند - Body Yogurt Naughty Coconut", price: 250, category: "Skin Care", inStock: true, image: "" },
+    { name: "زبدة الجسم برائحة جوز الهند - Body Butter Coconut", price: 275, category: "Skin Care", inStock: true, image: "" },
+    { name: "ماء الروزماري - Rosemary Water", price: 125, category: "Raw Products", inStock: true, image: "" },
+    { name: "مزيل عرق بدون رائحة - Unscented Deodorant", price: 250, category: "Skin Care", inStock: true, image: "" },
+    { name: "سيروم الاظافر - Nail serum", price: 200, category: "Skin Care", inStock: true, image: "" },
+    { name: "ماء النعناع - Peppermint Water", price: 100, category: "Raw Products", inStock: true, image: "" },
+    { name: "زيت القرع - Pumpkin seeds oil", price: 125, category: "Raw Products", inStock: true, image: "" },
+    { name: "زيت بذور العنب - Grapeseeds Oil", price: 225, category: "Raw Products", inStock: true, image: "" },
+    { name: "توكه ساتان - Satin Scrunchie", price: 75, category: "Hair Care", inStock: true, image: "" },
+    { name: "مشط خشبي", price: 100, category: "Hair Care", inStock: false, image: "" },
+    { name: "صابونة الاعشاب - Herbs Soap", price: 150, category: "Organic Soaps", inStock: true, image: "" },
+    { name: "بادي يوجرت برائحة الخوخ - Body Yogurt Fresh Peach", price: 250, category: "Skin Care", inStock: true, image: "" },
+    { name: "زيت السمسم - Sesame Oil", price: 120, category: "Raw Products", inStock: true, image: "" },
+    { name: "ماء الليمون - Lemon Water", price: 125, category: "Raw Products", inStock: true, image: "" },
+    { name: "زيت الكركديه - Hibiscus Oil", price: 150, category: "Raw Products", inStock: true, image: "" },
+    { name: "شامبو الاطفال - Kids Shampoo", price: 275, category: "Hair Care", inStock: true, image: "" },
+    { name: "زيت اللوز الحلو - Sweet Almond Oil", price: 150, category: "Raw Products", inStock: true, image: "" },
+    { name: "بادي يوجرت برائحة الروز فانيلا - Body Yogurt Rose Vanilla", price: 250, category: "Skin Care", inStock: true, image: "" },
+    { name: "زيت الخروع - Castor Oil", price: 120, category: "Raw Products", inStock: true, image: "" },
+    { name: "مقشر الشفاه - Lip Scrub", price: 100, category: "Lips Care", inStock: true, image: "" },
+    { name: "واقى الشمس - Sun Screen", price: 400, category: "Skin Care", inStock: false, image: "" },
+    { name: "زيت الافوكادو - Avocado Oil", price: 125, category: "Raw Products", inStock: true, image: "" },
+    { name: "زيت الارجان المغربي - Moroccan Argan Oil", price: 350, category: "Raw Products", inStock: true, image: "" },
+    { name: "فرشاة الشعر بخشب البامبو - Hair Brush", price: 250, category: "Hair Care", inStock: true, image: "" },
+    { name: "زيت القهوة - Coffee Oil", price: 150, category: "Raw Products", inStock: true, image: "" },
+    { name: "ماء اللافندر - Lavender Water", price: 125, category: "Raw Products", inStock: true, image: "" },
+    { name: "تنت كريمي - Tint Creamy", price: 175, category: "Skin Care", inStock: true, image: "" },
+    { name: "فوطه مايكروفايبر - Microfiber Towel", price: 250, category: "Hair Care", inStock: true, image: "" },
+    { name: "زبدة الشيا - Shea Butter", price: 200, category: "Raw Products", inStock: true, image: "" },
+    { name: "زيت الورد - Rose oil", price: 150, category: "Raw Products", inStock: true, image: "" },
+    { name: "زيت الجرجير - Eruca Oil", price: 120, category: "Raw Products", inStock: true, image: "" },
+    { name: "قناع الطمي الاسواني - Aswan Clay Mask", price: 250, category: "Skin Care", inStock: false, image: "" },
+    { name: "صابونة الشيا وجوز الهند - Shea and Coconut Soap", price: 150, category: "Organic Soaps", inStock: true, image: "" },
+    { name: "صابون مغربي - Moroccan Soap", price: 225, category: "Skin Care", inStock: true, image: "" },
+    { name: "مرطب الشفاه - Lip Balm", price: 125, category: "Lips Care", inStock: true, image: "" },
+    { name: "مقشر القهوه - Coffee Scrub", price: 250, category: "Skin Care", inStock: true, image: "" },
+    { name: "لوفه مغربي - Moroccan Loofah", price: 175, category: "Skin Care", inStock: true, image: "" },
+    { name: "سيرم حب الشباب - Acne Serum", price: 225, category: "Skin Care", inStock: true, image: "" },
+    { name: "الحنه النوبيه - Nubian Henna", price: 225, category: "Hair Care", inStock: true, image: "" },
+    { name: "بادي يوجرت Sexy Graffiti", price: 250, category: "Skin Care", inStock: true, image: "" },
+    { name: "صابونة الكركديه - Hibiscus Soap", price: 150, category: "Organic Soaps", inStock: false, image: "" },
+    { name: "واقى الشمس - Sun Block", price: 250, category: "Skin Care", inStock: true, image: "" },
+    { name: "زيت السعد - Cyperus Oil", price: 225, category: "Skin Care", inStock: true, image: "" },
+    { name: "زيت الجوجوبا - Jojoba Oil", price: 150, category: "Raw Products", inStock: true, image: "" },
+    { name: "صابونة الفحم - Charcoal Soap", price: 150, category: "Organic Soaps", inStock: true, image: "" },
+    { name: "صابونة القهوه - Coffee Soap", price: 150, category: "Organic Soaps", inStock: true, image: "" },
+    { name: "سيرم الهيالورونيك - Hyaluronic Acid Serum", price: 450, category: "Skin Care", inStock: true, image: "" },
+    { name: "جيل الصبار - Aleo Vera gel", price: 200, category: "Hair Care", inStock: true, image: "" },
+    { name: "كريم الكولاجين - Collagen Cream", price: 250, category: "Skin Care", inStock: true, image: "" },
+    { name: "سيرم الرموش - Eyelash Serum", price: 200, category: "Skin Care", inStock: true, image: "" },
+    { name: "بلسم الشعر - Hair Conditioner", price: 275, category: "Hair Care", inStock: true, image: "" },
+    { name: "الوصفه النوبيه - Nubian Recipe", price: 425, category: "Hair Care", inStock: true, image: "" },
+    { name: "وصفة كارما - Karma Recipe", price: 425, category: "Hair Care", inStock: true, image: "" },
+    { name: "غسول الوجه بالجزر - Facial Cleanser with Carrot", price: 250, category: "Skin Care", inStock: true, image: "" },
+    { name: "شامبو الشعر - Hair Shampoo", price: 275, category: "Hair Care", inStock: true, image: "" },
+    { name: "كريم مرطب سوفت اند جلو - Soft and glow Cream", price: 250, category: "Skin Care", inStock: true, image: "" },
+    { name: "سبراي كارما مقوي للشعر - Karma Tonic Spray200", price: 325, category: "Hair Care", inStock: true, image: "" },
+    { name: "مزيل عرق اكسترا - Extra Whitening Deodorant", price: 250, category: "Skin Care", inStock: true, image: "" },
+    { name: "سبراي كارما تونيك اكسترا - Karma Tonic Extra", price: 450, category: "Hair Care", inStock: true, image: "" },
+    { name: "مزيل عرق للتفتيح - Whitening Deodorant", price: 200, category: "Skin Care", inStock: true, image: "" },
+    { name: "تنت ملون الشفاه والخدود - Tint", price: 100, category: "Skin Care", inStock: true, image: "" }
 ];
 
 function removeDuplicates(products) {
@@ -248,13 +268,23 @@ function displayProducts(products) {
         const statusClass = product.inStock ? 'in-stock' : 'out-of-stock';
         const statusText = product.inStock ? 'متوفر' : 'غير متوفر';
 
+        // إضافة عنصر الصورة فقط إذا كانت هناك صورة محددة للمنتج
+        const imageHTML = (product.image && product.image.trim() !== "") 
+            ? `<div class="product-image-wrapper">
+                 <img src="${product.image}" alt="${product.name}" class="product-image">
+               </div>`
+            : '';
+
         card.innerHTML = `
             <span class="status-badge ${statusClass}">${statusText}</span>
-            <div>
-                <div class="product-category">${product.category}</div>
-                <div class="product-title">${product.name}</div>
+            ${imageHTML}
+            <div class="product-info">
+                <div>
+                    <div class="product-category">${product.category}</div>
+                    <div class="product-title">${product.name}</div>
+                </div>
+                <div class="product-price">${product.price} EGP</div>
             </div>
-            <div class="product-price">${product.price} EGP</div>
         `;
         grid.appendChild(card);
     });
